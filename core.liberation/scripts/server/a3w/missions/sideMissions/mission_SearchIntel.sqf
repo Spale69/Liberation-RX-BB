@@ -7,13 +7,15 @@
 if (!isServer) exitwith {};
 #include "sideMissionDefines.sqf"
 
-private ["_nbUnits", "_intels", "_civilians"];
+private ["_nbUnits", "_intels", "_civilians", "_ttl", "_discovered"];
 
 _setupVars =
 {
 	_missionType = "STR_SEARCH_INTEL";
 	_locationsArray = [SpawnMissionMarkers] call checkSpawn;
 	_nbUnits = [] call getNbUnits;
+	_discovered = false;
+	_ttl = 0;
 };
 
 _setupObjects =
@@ -170,12 +172,25 @@ _waitUntilSuccessCondition = {
 _waitUntilCondition = {
 	_ret = false;
 	{
-		if (_x distance2D _missionPos < GRLIB_sector_size) then {
-			if (_aiGroup knowsAbout _x == 4 ) then { _ret = true };
+		if (_x distance2D _missionPos < GRLIB_sector_size && _discovered != true) then {
+			if (_aiGroup knowsAbout _x == 4 ) then {
+				_discovered = true;
+				_ttl = round (time + 300);
+				private _sound = "A3\data_f_curator\sound\cfgsounds\air_raid.wss";
+				for "_i" from 0 to 1 do {
+					playSound3D [_sound, _missionPos, false, ATLToASL _missionPos, 5, 1, 1000];
+					sleep 5;
+				};
+				private _msg = ["<t color='#FFFFFF' size='2'>You have been Detected!!</t>", "PLAIN", -1, false, true];
+				{
+					if (_x distance2D _missionPos < GRLIB_sector_size) then { [_msg] remoteExec ["titleText", owner _x] };
+				} forEach (AllPlayers - (entities "HeadlessClient_F"));
+			};
 		};
 	} forEach (AllPlayers - (entities "HeadlessClient_F"));
 
-	if (_ret) then {
+	if (_discovered == true && (time > _ttl)) then {
+		_ret = true;
 		[_missionPos] spawn {
 			params ["_pos"];
 			private _sound = "A3\data_f_curator\sound\cfgsounds\air_raid.wss";
@@ -184,11 +199,9 @@ _waitUntilCondition = {
 				sleep 5;
 			};
 			private _msg = ["<t color='#FFFFFF' size='2'>You have been Detected!!<br/><br/>Enemies destroy the </t><t color='#ff0000' size='3'>INTELS</t><t color='#FFFFFF' size='2'> !!</t>", "PLAIN", -1, false, true];
-
 			{
 				if (_x distance2D _pos < GRLIB_sector_size) then { [_msg] remoteExec ["titleText", owner _x] };
 			} forEach (AllPlayers - (entities "HeadlessClient_F"));
-
 			for "_i" from 0 to 1 do {
 				playSound3D [_sound, _pos, false, ATLToASL _pos, 5, 1, 1000];
 				sleep 5;
