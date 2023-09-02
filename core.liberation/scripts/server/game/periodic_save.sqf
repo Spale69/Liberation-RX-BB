@@ -4,8 +4,8 @@ while { GRLIB_endgame == 0 } do {
 	sleep GRLIB_autosave_timer;
 	
 	{
-		[_x] call save_context;
-		sleep 0.1;
+		[_x, getPlayerUID _x] call save_context;
+		sleep 1;
 	} foreach (AllPlayers - (entities "HeadlessClient_F"));
 
 	[] call save_game_mp;

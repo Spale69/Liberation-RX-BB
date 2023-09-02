@@ -1,4 +1,4 @@
-params ["_unit"];
+params ["_unit", "_uid"];
 
 if (isNull _unit) exitWith {};
 
@@ -11,19 +11,7 @@ if (_name in ["HC1","HC2","HC3" ]) exitWith {
 	false;
 };
 
-private _uid = getPlayerUID _unit;
 diag_log format ["--- LRX Cleanup player %1 (%2)", _name, _uid];
-
-// Remove Dog
-private _my_dog = _unit getVariable ["my_dog", nil];
-if (!isNil "_my_dog") then { deleteVehicle _my_dog };
-
-// Abandon Car too Far
-private _cleanveh = [vehicles, {
-	_x getVariable ["GRLIB_vehicle_owner", ""] == _uid &&
-	!([_x, "FOB", GRLIB_fob_range] call F_check_near)
-}] call BIS_fnc_conditionalSelect;
-{ [_x, "abandon"] call F_vehicleLock } forEach _cleanveh;
 
 // Untow vehicle near FOB
 private _towveh = [vehicles, {
@@ -32,6 +20,17 @@ private _towveh = [vehicles, {
 	([_x, "FOB", GRLIB_sector_size] call F_check_near)
 }] call BIS_fnc_conditionalSelect;
 { [_x] call untow_vehicle } forEach _towveh;
+
+// Abandon Car too Far
+private _cleanveh = [vehicles, {
+	_x getVariable ["GRLIB_vehicle_owner", ""] == _uid &&
+	!([_x, "FOB", GRLIB_fob_range] call F_check_near)
+}] call BIS_fnc_conditionalSelect;
+{ [_x, "abandon"] call F_vehicleLock } forEach _cleanveh;
+
+// Remove Dog
+private _my_dog = _unit getVariable ["my_dog", nil];
+if (!isNil "_my_dog") then { deleteVehicle _my_dog };
 
 // Remove Marker
 deletemarker format ["PAR_marker_%1", _name];
@@ -66,4 +65,3 @@ deleteVehicle _unit;
 
 private _text = format ["Bye bye %1, see you soon...", _name];
 [gamelogic, _text] remoteExec ["globalChat", -2];
-

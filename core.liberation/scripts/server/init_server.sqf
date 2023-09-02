@@ -3,8 +3,8 @@ diag_log "--- Server Init start ---";
 // EventHandler
 addMissionEventHandler ['HandleDisconnect', {
 	params ["_unit", "_id", "_uid", "_name"];
-	[_unit, true] call save_context;
-	[_unit] call cleanup_player;
+	[_unit, _uid, true] call save_context;
+	[_unit, _uid] call cleanup_player;
 	if (count (AllPlayers - (entities "HeadlessClient_F")) == 0) then {
 		[] call save_game_mp;
 		diag_log "--- LRX Mission End!";
@@ -150,6 +150,7 @@ if (abort_loading) exitWith {
 [] execVM "scripts\server\game\playtime.sqf";
 [] execVM "scripts\server\game\clean.sqf";
 [] execVM "scripts\server\game\periodic_save.sqf";
+[] execVM "scripts\server\game\save_game_mp_init.sqf";
 [] execVM "scripts\server\a3w\init_missions.sqf";
 [] execVM "scripts\server\ar\fn_advancedRappellingInit.sqf";
 

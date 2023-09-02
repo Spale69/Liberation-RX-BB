@@ -90,11 +90,13 @@ if (_unit == player) then {
 	};
 
 	// Unblock units
-	missionNamespace setVariable [
-	"BIS_fnc_addCommMenuItem_menu", [
+	private _actions = missionNamespace getVariable ["BIS_fnc_addCommMenuItem_menu", []];
+	private _id = (count _actions / 2) + 1;
+	_actions = _actions + [
 		["Do it !", true],
-		["Unblock unit.", [2], "", -5, [["expression", "[groupSelectedUnits player] spawn PAR_unblock_AI"]], "1", "1"]
-	]];
+		["Unblock unit.", [_id + 1], "", -5, [["expression", "[groupSelectedUnits player] spawn PAR_unblock_AI"]], str _id, str _id]
+	];
+	missionNamespace setVariable ["BIS_fnc_addCommMenuItem_menu", _actions];
 
 	// UI actions
 	inGameUISetEventHandler ["Action", "
@@ -133,8 +135,9 @@ if (_unit == player) then {
 		3 fadeMusic 0;
 		NRE_EarplugsActive = 0;
 		if (!GRLIB_ACE_enabled) then {
-			if ( (getPos _unit) select 2 >= 20 && !(_unit getVariable ["AR_Is_Rappelling",false]) ) then {
-				[_unit] spawn F_ejectUnit;
+			if ( (getPos _unit) select 2 >= 50 && !(_unit getVariable ["AR_Is_Rappelling",false]) && (backpack _unit != "B_Parachute")) then {
+				private _para = createVehicle ["Steerable_Parachute_F",(getPos _unit),[],0,'none'];
+				_unit moveInDriver _para;
 			};
 		};
 		[_unit] spawn {
