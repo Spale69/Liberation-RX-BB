@@ -12,7 +12,7 @@ if ( side player == GRLIB_side_friendly ) then {
 };
 
 while { true } do {
-	waitUntil { sleep 0.2; show_teammates };
+	waitUntil { sleep 0.5; show_teammates };
 	while { show_teammates } do {
 
 		{
@@ -50,14 +50,14 @@ while { true } do {
 
 		private _stuff_to_unmark = [];
 		{
-			if ( (vehicle _x != _x) || !(alive _x) ) then {
+			if ( (vehicle _x != _x) || !(alive _x) || (side group _x != GRLIB_side_friendly) ) then {
 				_stuff_to_unmark pushback _x;
 				_marked_players = _marked_players - [_x];
 			};
 		} foreach _marked_players;
 
 		{
-			if ( (vehicle _x != _x) || !(alive _x) ) then {
+			if ( (vehicle _x != _x) || !(alive _x) || (side group _x != GRLIB_side_friendly) ) then {
 				_stuff_to_unmark pushback _x;
 				_marked_squadmates = _marked_squadmates - [_x];
 			};
@@ -112,7 +112,7 @@ while { true } do {
 				_marker setMarkerColorLocal _color;
 			};
 
-			_marker setMarkerTextLocal format [ "%1", ( [ _nextai ] call F_getUnitPositionId )];
+			_marker setMarkerTextLocal format [ "%1. %2", [_nextai] call F_getUnitPositionId, name _x];
 		} foreach _marked_squadmates;
 
 		{
@@ -133,7 +133,7 @@ while { true } do {
 				if (isPlayer _x) then {
 					_vehiclename = _vehiclename + (name _x);
 				} else {
-					_vehiclename = _vehiclename + ( format [ "%1", [ _x ] call F_getUnitPositionId ] );
+					_vehiclename = _vehiclename + (format [ "%1. %2", [_x] call F_getUnitPositionId, name _x]);
 				};
 
 				if( (_datcrew find _x) != ((count _datcrew) - 1) ) then {

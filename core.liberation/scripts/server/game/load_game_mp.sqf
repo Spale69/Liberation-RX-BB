@@ -240,6 +240,7 @@ if ( !isNil "_lrx_liberation_savegame" ) then {
 			if ( _nextclass in list_static_weapons ) then {
             	_nextbuilding setVariable ["R3F_LOG_disabled", false, true];
 				_nextbuilding setVehicleLock "DEFAULT";
+				{ _nextbuilding lockTurret [_x, false] } forEach (allTurrets _nextbuilding);
 
 				if (_nextclass in static_vehicles_AI) then {
 					_nextbuilding setVehicleLock "LOCKEDPLAYER";
@@ -250,6 +251,7 @@ if ( !isNil "_lrx_liberation_savegame" ) then {
 				};
 			};
 			if ( _nextclass == playerbox_typename ) then {
+				_nextbuilding setVariable ["R3F_LOG_disabled", false, true];
 				_nextbuilding setVehicleLock "DEFAULT";
 				[_nextbuilding, _x select 5] call F_setCargo;
 			};
@@ -331,7 +333,7 @@ if ( !isNil "_lrx_liberation_savegame" ) then {
 	{
 		_allow_damage = true;
 		if ( (typeOf _x) in [FOB_typename,FOB_outpost,FOB_sign,Warehouse_typename,playerbox_typename] ) then {
-			_x addEventHandler ["HandleDamage", { 0 }];
+			//_x addEventHandler ["HandleDamage", { 0 }];
 			_allow_damage = false;
 		};
 		if ( (typeOf _x) in GRLIB_Ammobox_keep && [_x] call is_public ) then {
@@ -339,6 +341,9 @@ if ( !isNil "_lrx_liberation_savegame" ) then {
 		};
 		if ((typeOf _x) isKindOf "Land_PortableHelipadLight_01_F") then {
 			_allow_damage = false;
+		};
+		if ((typeOf _x) in (list_static_weapons - static_vehicles_AI)) then {
+			_allow_damage = false;	
 		};
 		if ( _allow_damage ) then { _x allowDamage true };
 	} foreach _buildings_created;

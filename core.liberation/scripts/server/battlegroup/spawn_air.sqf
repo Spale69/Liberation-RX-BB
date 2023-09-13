@@ -50,7 +50,7 @@ while {	{( alive _x )} count (units _air_grp) > 0 } do {
 		};
 
 		if ( alive _unit && _vehicle == _unit ) then {
-			private _sectors = (sectors_allSectors - blufor_sectors);
+			private _sectors = opfor_sectors;
 			if (_side == GRLIB_side_friendly) then {_sectors = blufor_sectors};
 			private _nearest_sector = [_sectors, _unit] call F_nearestPosition;
 
@@ -63,7 +63,7 @@ while {	{( alive _x )} count (units _air_grp) > 0 } do {
 				_waypoint setWaypointType "MOVE";
 				_waypoint setWaypointSpeed "FULL";
 				_waypoint setWaypointBehaviour "SAFE";
-				_waypoint setWaypointCombatMode "WHITE";
+				_waypoint setWaypointCombatMode "BLUE";
 				_waypoint setWaypointCompletionRadius 50;
 				_waypoint setWaypointStatements ["true", "deleteVehicle this"];
 				{_x doFollow leader _flee_grp} foreach units _flee_grp;

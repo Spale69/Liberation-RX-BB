@@ -7,7 +7,7 @@ private _save_warmup = 300;
 if (time < _save_warmup && !_force) exitWith {diag_log format ["--- LRX MP Warmup (no save done), %1sec remaining...", round (_save_warmup - time)];};
 diag_log format ["--- LRX Save start at %1", time];
 
-if ( GRLIB_endgame >= 1 ) then {
+if ( GRLIB_endgame >= 1 || GRLIB_global_stop == 1 ) then {
     if (GRLIB_param_wipe_keepscore == 1) then {
         GRLIB_permissions = profileNamespace getVariable GRLIB_save_key select 12;
         GRLIB_player_scores = [];
@@ -184,7 +184,7 @@ if ( GRLIB_endgame >= 1 ) then {
 
     // Save Blob
     private _lrx_liberation_savegame = [
-        (blufor_sectors - ["final_fight"]),
+        blufor_sectors,
         GRLIB_all_fobs,
         buildings_to_save,
         time_of_day,

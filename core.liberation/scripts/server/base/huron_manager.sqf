@@ -37,14 +37,11 @@ while { true } do {
 		};
 
 		if ( alive huron ) then {
-			waitUntil {
-				sleep 1;
-				!alive huron;
-			};
+			waitUntil { sleep 1; !alive huron };
 			stats_spartan_respawns = stats_spartan_respawns + 1;
 			sleep 15;
 		};
 		deletevehicle huron;	
 	};
-	sleep 10;
+	sleep 16;
 };

@@ -2,7 +2,7 @@ private [ "_marker", "_nextgroup" ];
 if (GRLIB_fancy_info == 0) exitWith {};
 
 waitUntil {sleep 1; !isNil "GRLIB_init_server"};
-waitUntil {sleep 1;	!isNil "blufor_sectors"};
+
 private _hostile_markers = [];
 
 while { true } do {
@@ -13,7 +13,7 @@ while { true } do {
 		_nextgroup = _x;
 		_leader = leader _nextgroup;
 		_mission_ai = !(_leader getVariable ["GRLIB_mission_AI", false]);
-		if (alive _leader && _mission_ai && [(getPosATL _leader), GRLIB_side_friendly, GRLIB_radiotower_size] call F_getNearestTower != "") then {
+		if (alive _leader && _mission_ai && [(getPosATL _leader), GRLIB_side_friendly] call F_getNearestTower != "") then {
 			_marker = createMarkerLocal [format ["hostilegroup%1",_x], markers_reset];
 			_marker setMarkerColorLocal GRLIB_color_enemy_bright;
 			_marker setMarkerTypeLocal "mil_warning";

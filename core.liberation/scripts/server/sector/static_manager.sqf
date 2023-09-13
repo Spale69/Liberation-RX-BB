@@ -1,16 +1,16 @@
 params [ "_sector", "_number" ];
 
-//if (_sector in active_sectors) exitWith {};
 if (_number == 0) exitWith {};
 if (_number >= 1) then {
+	sleep 2;    
 	[ _sector, _number - 1 ] spawn static_manager;
 };
 
 // Create
-private _grp = createGroup [GRLIB_side_enemy, true];
 private _spawn_pos = [markerPos _sector, floor(random 50), random 360] call BIS_fnc_relPos;
-private _vehicle = [_spawn_pos, selectRandom opfor_statics] call F_libSpawnVehicle;
-
+if (surfaceIsWater _spawn_pos) exitWith {};
+private _grp = createGroup [GRLIB_side_enemy, true];
+private _vehicle = [_spawn_pos, selectRandom opfor_statics, true] call F_libSpawnVehicle;
 _vehicle setVariable ["GRLIB_counter_TTL", round(time + 900)];
 opfor_spotter createUnit [ getposATL _vehicle, _grp, 'this addMPEventHandler ["MPKilled", {_this spawn kill_manager}]', 0.5, "PRIVATE"];
 opfor_spotter createUnit [ getposATL _vehicle, _grp, 'this addMPEventHandler ["MPKilled", {_this spawn kill_manager}]', 0.5, "PRIVATE"];
@@ -43,10 +43,6 @@ waitUntil {
 
 // Cleanup
 waitUntil { sleep 10; (GRLIB_global_stop == 1 || [markerPos _sector, GRLIB_sector_size, GRLIB_side_friendly] call F_getUnitsCount == 0) };
-{ 
-    if (!isNull objectParent _x) then { [vehicle _x] call clean_vehicle };
-    deleteVehicle _x;
-    sleep 0.1;
-} forEach (units _grp);
-deleteGroup _grp;
 [_vehicle] call clean_vehicle;
+{ deleteVehicle _x } forEach (units _grp);
+deleteGroup _grp;

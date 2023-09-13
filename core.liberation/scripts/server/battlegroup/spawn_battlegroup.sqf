@@ -9,7 +9,7 @@ if ( isNil "_liberated_sector" ) then {
 	_spawn_marker = [GRLIB_spawn_min, GRLIB_spawn_max] call F_findOpforSpawnPoint;
 	_objective_pos = ([markerpos _spawn_marker] call F_getNearestBluforObjective) select 0;
 } else {
-	_spawn_marker = [GRLIB_spawn_min, GRLIB_spawn_max, true, _liberated_sector] call F_findOpforSpawnPoint;
+	_spawn_marker = [GRLIB_spawn_min, GRLIB_spawn_max, true, markerPos _liberated_sector] call F_findOpforSpawnPoint;
 	_objective_pos = markerPos _liberated_sector;
 	if ((markerPos _spawn_marker) distance2D _objective_pos > GRLIB_spawn_max) then {
 		_spawn_marker = [GRLIB_spawn_min, GRLIB_spawn_max] call F_findOpforSpawnPoint;
@@ -46,7 +46,7 @@ if (_spawn_marker != "") then {
 		[_nextgrp, _objective_pos] spawn battlegroup_ai;
 		{ _x setVariable ["GRLIB_counter_TTL", round(time + 3600)] } forEach (units _nextgrp);
 		_bg_groups pushback _nextgrp;
-		if ( ( _x in opfor_troup_transports_truck + opfor_troup_transports_heli) && ([] call F_opforCap < GRLIB_battlegroup_cap)) then {
+		if ( ( _x in opfor_troup_transports_truck + opfor_troup_transports_heli) && (opforcap < GRLIB_battlegroup_cap)) then {
 			[_vehicle, _objective_pos] spawn troup_transport;
 		};
 		sleep 2;

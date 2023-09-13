@@ -66,8 +66,13 @@ stats_readiness_earned = stats_readiness_earned + _combat_readiness_increase;
 publicVariable "stats_readiness_earned";
 
 [ _liberated_sector, 0 ] remoteExec ["remote_call_sector", 0];
-blufor_sectors pushback _liberated_sector; publicVariable "blufor_sectors";
+
+blufor_sectors pushback _liberated_sector;
+publicVariable "blufor_sectors";
+opfor_sectors = (sectors_allSectors - blufor_sectors);
+publicVariable "opfor_sectors";
 stats_sectors_liberated = stats_sectors_liberated + 1;
+sleep 1;
 
 if (isServer) then {
 	[] spawn check_victory_conditions;
@@ -81,8 +86,8 @@ if ( GRLIB_endgame == 0 ) then {
 	if (
 	   (!( _liberated_sector in sectors_tower )) &&
 	   ((combat_readiness > 70) || (_liberated_sector in sectors_bigtown)) &&
-	   ([] call F_opforCap < GRLIB_battlegroup_cap) &&
-	   (diag_fps > 30.0) && (floor random 3 == 0)
+	   (opforcap < GRLIB_battlegroup_cap) &&
+	   (diag_fps > 30.0) && (floor random 2 == 0)
 	) then {
 		diag_log format ["Spawn Sector Captured BattlegGroup at %1", time];
 		[_liberated_sector] spawn spawn_battlegroup;

@@ -33,7 +33,7 @@ if (!([_missionsList, _mission_name] call getMissionState)) then {
 //Sunken Supply
 _mission_name = "mission_SunkenSupplies";
 if (!([_missionsList, _mission_name] call getMissionState)) then {
-	if (_spawn_place_water >= 1) then {
+	if (_spawn_place_water >= 1 && count opfor_boats >= 1) then {
 		[_missionsList, _mission_name, false] call setMissionState;
 	} else {
 		[_missionsList, _mission_name, true] call setMissionState;
@@ -84,7 +84,7 @@ if (!([_missionsList, _mission_name] call getMissionState)) then {
 _mission_name = "mission_HostileHelicopter";
 if (!([_missionsList, _mission_name] call getMissionState)) then {
 	private _opfor_city = count ([] call cityList);
-	if (_opfor_city <= 1) then {
+	if (_opfor_city < 2) then {
 		[_missionsList, _mission_name, true] call setMissionState;
 	} else {
 		[_missionsList, _mission_name, false] call setMissionState;
@@ -95,8 +95,7 @@ if (!([_missionsList, _mission_name] call getMissionState)) then {
 _mission_name = "mission_CaptureVIP";
 if (!([_missionsList, _mission_name] call getMissionState)) then {
 	private _opfor_city = count ([] call cityList);
-	private _excluded_map = ["Stratis", "Eusa"];
-	if (_opfor_city <= 1 || worldName in _excluded_map) then {
+	if (_opfor_city < 3) then {
 		[_missionsList, _mission_name, true] call setMissionState;
 	} else {
 		[_missionsList, _mission_name, false] call setMissionState;

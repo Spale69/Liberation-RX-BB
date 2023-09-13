@@ -2,19 +2,17 @@ private [ "_all_static", "_static", "_all_light" ];
 
 private _day = call is_night;
 private _old_day = !_day;
+private _static_classname = list_static_weapons - static_vehicles_AI;
 
 while { true } do {
-    _all_static = [vehicles, { alive _x && (typeOf _x) in (list_static_weapons - static_vehicles_AI)}] call BIS_fnc_conditionalSelect;
+    _all_static = [vehicles, { alive _x && (typeOf _x) in _static_classname }] call BIS_fnc_conditionalSelect;
 
     {
         _static = _x;
   
         // No damage
-        private _owner = owner _static;
-        if (_owner == 0) then {
+        if (local _static && isDamageAllowed _static) then {
             _static allowDamage false;
-        } else {
-            [_static, false] remoteExec ["allowDamage", _owner];
         };
 
         // Correct static position
@@ -37,14 +35,14 @@ while { true } do {
                 if (alive _x) exitWith {
                     [_x] orderGetIn true;
                     _x assignAsGunner _static;
-                    _x moveInGunner _static;
+                    //_x moveInGunner _static;
                     sleep 1;
                 };
             } forEach _gunner_list;
         };
 
         // OPFor infinite Ammo
-        if (typeOf _static in opfor_statics) then {
+        if (typeOf _static in opfor_statics && side group _gunner == GRLIB_side_enemy) then {
             _static setVehicleAmmo 1;
             if !(isNull _gunner) then {
                 [_gunner] spawn F_getNearestEnemy;
@@ -78,5 +76,5 @@ while { true } do {
         _old_day = _day;
     };
 
-	sleep 20;
+	sleep 23;
 };

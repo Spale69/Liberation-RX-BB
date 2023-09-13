@@ -133,7 +133,6 @@ if (abort_loading) exitWith {
 [] execVM "scripts\server\battlegroup\counter_battlegroup.sqf";
 [] execVM "scripts\server\battlegroup\random_battlegroups.sqf";
 [] execVM "scripts\server\battlegroup\readiness_increase.sqf";
-[] execVM "scripts\server\resources\unit_cap.sqf";
 [] execVM "scripts\server\resources\manage_resources.sqf";
 [] execVM "scripts\server\patrols\civilian_patrols.sqf";
 [] execVM "scripts\server\patrols\enemy_patrols.sqf";
@@ -147,17 +146,16 @@ if (abort_loading) exitWith {
 [] execVM "scripts\server\secondary\autostart.sqf";
 [] execVM "scripts\server\game\synchronise_vars.sqf";
 [] execVM "scripts\server\game\zeus_synchro.sqf";
-[] execVM "scripts\server\game\playtime.sqf";
 [] execVM "scripts\server\game\clean.sqf";
 [] execVM "scripts\server\game\periodic_save.sqf";
 [] execVM "scripts\server\game\save_game_mp_init.sqf";
 [] execVM "scripts\server\a3w\init_missions.sqf";
 [] execVM "scripts\server\ar\fn_advancedRappellingInit.sqf";
+[] execVM "scripts\server\offloading\show_fps.sqf";
 
 // Offloading
 [] execVM "scripts\server\offloading\offload_calculation.sqf";
 [] execVM "scripts\server\offloading\offload_manager.sqf";
-[] execVM "scripts\server\offloading\show_fps.sqf";
 
 global_locked_group = [];
 publicVariable "global_locked_group";

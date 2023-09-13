@@ -455,6 +455,8 @@ while { true } do {
 				if ( _classname in ["I_E_Truck_02_MRL_F"] ) then {
 					[_vehicle, ["EAF",1], true ] call BIS_fnc_initVehicle;
 				};
+
+				_vehicle addEventHandler ["HandleDamage", { _this call damage_manager_friendly }];
 			};
 
 			// Automatic ReAmmo
@@ -485,6 +487,11 @@ while { true } do {
 			};
 
 			// Static Weapon
+			if (_classname in (list_static_weapons - static_vehicles_AI)) then {
+				_allow_damage = false;
+			};
+
+			// AI Static Weapon
 			if (_classname in static_vehicles_AI) then {
 				_vehicle setMass 5000;
 				[ _vehicle ] call F_forceBluforCrew;
@@ -513,9 +520,7 @@ while { true } do {
 			};
 
 			sleep 0.3;
-			if (_allow_damage) then {
-				_vehicle allowDamage true;
-			};
+			if (_allow_damage) then { _vehicle allowDamage true };
 			_vehicle setDamage 0;
 			build_vehicle = _vehicle;
 

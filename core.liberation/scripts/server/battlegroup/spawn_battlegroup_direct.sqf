@@ -4,7 +4,7 @@ params ["_objectivepos", "_intensity"];
 diag_log format ["Spawn Direct BattlegGroup level %1 at %2", _intensity, time];
 
 private _bg_groups = [];
-private _spawn_marker = [GRLIB_spawn_min, GRLIB_spawn_max, true] call F_findOpforSpawnPoint;
+private _spawn_marker = [GRLIB_spawn_min, GRLIB_spawn_max, true, _objectivepos] call F_findOpforSpawnPoint;
 private _vehicle_pool = opfor_battlegroup_vehicles;
 if ( _intensity == 1 ) then {
 	_vehicle_pool = opfor_battlegroup_vehicles_low_intensity;
@@ -28,7 +28,7 @@ if (_spawn_marker != "") then {
 		[_nextgrp, _objectivepos] spawn battlegroup_ai;
 		{ _x setVariable ["GRLIB_counter_TTL", round(time + 3600)] } forEach (units _nextgrp);
 		_bg_groups pushback _nextgrp;
-		if ( ( _x in opfor_troup_transports_truck + opfor_troup_transports_heli) && ([] call F_opforCap < GRLIB_battlegroup_cap)) then {
+		if ( ( _x in opfor_troup_transports_truck + opfor_troup_transports_heli) && (opforcap < GRLIB_battlegroup_cap)) then {
 			[_vehicle, _objectivepos] spawn troup_transport;
 		};
 		sleep 2;
